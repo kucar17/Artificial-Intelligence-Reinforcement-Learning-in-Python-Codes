@@ -141,5 +141,5 @@ print("Bandit3 win estimate:", bandit3.p_estimate)
 print(" ")
 
 plt.plot(winRateList)
-plt.show()
 plt.grid(True)
+plt.show()
