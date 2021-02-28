@@ -124,7 +124,6 @@ while i < numOfPlays:
     winRate = totalWins / i
     winRateList.append(winRate)
 
-    #time.sleep(0.2)
     os.system('cls')
 
 print("Times played: ", numOfPlays)
