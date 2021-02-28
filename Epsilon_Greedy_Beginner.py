@@ -4,7 +4,7 @@ import os
 import time
 import matplotlib.pyplot as plt
 
-numOfPlays = 2000
+numOfPlays = 500
 results = np.zeros(numOfPlays)
 wins = 0
 losses = 0
@@ -40,15 +40,15 @@ class Bandit:
     def update(self, result):
         
         self.N += 1
-        self.p_estimate = wins / self.N
+        #self.p_estimate = wins / self.N
 
         if result == 0:
             self.win_count += 0
-            self.p_estimate = self.win_count / self.N
+            self.p_estimate = (1/self.N) * ((self.N-1) * self.p_estimate + result)
 
         if result == 1:
             self.win_count += 1
-            self.p_estimate = self.win_count / self.N
+            self.p_estimate = (1/self.N) * ((self.N-1) * self.p_estimate + result)
 
 def findMaxIndex(list):
 
@@ -65,6 +65,8 @@ i = 0
 # PLAY BEGINS
 
 while i < numOfPlays:
+
+    print("PLAYING...")
 
     epsilonCheck = random.uniform(0, 1)
 
@@ -118,9 +120,6 @@ while i < numOfPlays:
         losses += 1
         winList.append(winList[-1] + 0)
 
-    print("Number of wins:", wins)
-    print("Number of losses:", losses)
-
     totalWins = bandit1.win_count + bandit2.win_count + bandit3.win_count
     winRate = totalWins / i
     winRateList.append(winRate)
@@ -147,14 +146,10 @@ print(" ")
 print("Number of times played with Bandit3:", bandit3.N)
 print("Number of times won with Bandit3:", bandit3.win_count)
 print("Bandit3 win estimate:", bandit3.p_estimate)
-
 print(" ")
-
 
 print("Number of times explore is chosen:", exploreCount)
 print("Number of times exploit is chosen:", numOfPlays - exploreCount)
-
-print(" ")
 
 plt.plot(winRateList)
 plt.grid(True)
