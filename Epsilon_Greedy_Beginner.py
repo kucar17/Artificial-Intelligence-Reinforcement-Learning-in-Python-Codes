@@ -148,6 +148,9 @@ print("Number of times played with Bandit3:", bandit3.N)
 print("Number of times won with Bandit3:", bandit3.win_count)
 print("Bandit3 win estimate:", bandit3.p_estimate)
 
+print(" ")
+
+
 print("Number of times explore is chosen:", exploreCount)
 print("Number of times exploit is chosen:", numOfPlays - exploreCount)
 
