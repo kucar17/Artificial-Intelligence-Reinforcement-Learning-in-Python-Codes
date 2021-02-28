@@ -118,14 +118,10 @@ while i < numOfPlays:
         losses += 1
         winList.append(winList[-1] + 0)
 
-    print("Number of wins:", wins)
-    print("Number of losses:", losses)
-
     totalWins = bandit1.win_count + bandit2.win_count + bandit3.win_count
     winRate = totalWins / i
     winRateList.append(winRate)
 
-    #time.sleep(0.2)
     os.system('cls')
 
 print("Times played: ", numOfPlays)
@@ -150,11 +146,8 @@ print("Bandit3 win estimate:", bandit3.p_estimate)
 
 print(" ")
 
-
 print("Number of times explore is chosen:", exploreCount)
 print("Number of times exploit is chosen:", numOfPlays - exploreCount)
-
-print(" ")
 
 plt.plot(winRateList)
 plt.grid(True)
