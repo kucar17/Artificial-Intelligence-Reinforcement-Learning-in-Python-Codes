@@ -4,15 +4,17 @@ import os
 import time
 import matplotlib.pyplot as plt
 
-numOfPlays = 500
+numOfPlays = 2000
 results = np.zeros(numOfPlays)
 wins = 0
 losses = 0
 winList = [0]
 winRateList = [0]
 
-bandit_probs = [0.2, 0.4, 0.6]
+bandit_probs = [0.2, 0.5, 0.75]
 epsilon = 0.15
+
+exploreCount = 0
 
 class Bandit:
 
@@ -27,7 +29,7 @@ class Bandit:
         
         rate = random.uniform(0, 1)
 
-        if rate > self.p:
+        if rate < self.p:
 
             return 1
 
@@ -88,14 +90,20 @@ while i < numOfPlays:
     else:
 
         epsilonCheckCheck = random.uniform(0, 1)
+        exploreCount += 1
 
-        if epsilonCheckCheck > 0.5:
+        if epsilonCheckCheck >= 0.66:
+            print("You chose exploration and chose Bandit1!")
+            result = bandit1.pull()
+            bandit1.update(result)
+        
+        elif 0.33 <= epsilonCheckCheck < 0.66:
             print("You chose exploration and chose Bandit2!")
             result = bandit2.pull()
             bandit2.update(result)
-        
+
         else:
-            print("You chose exploration and chose Bandit3!")
+            print("You chose exploration and chose Bandit2!")
             result = bandit3.pull()
             bandit3.update(result)
 
@@ -120,8 +128,10 @@ while i < numOfPlays:
     #time.sleep(0.2)
     os.system('cls')
 
+print("Times played: ", numOfPlays)
 print("Number of wins:", wins)
 print("Number of losses:", losses)
+print("Win ratio:", winRate)
 print(" ")
 
 print("Number of times played with Bandit1:", bandit1.N)
@@ -138,8 +148,12 @@ print("Number of times played with Bandit3:", bandit3.N)
 print("Number of times won with Bandit3:", bandit3.win_count)
 print("Bandit3 win estimate:", bandit3.p_estimate)
 
+print("Number of times explore is chosen:", exploreCount)
+print("Number of times exploit is chosen:", numOfPlays - exploreCount)
+
 print(" ")
 
 plt.plot(winRateList)
-plt.show()
 plt.grid(True)
+plt.show()
+
