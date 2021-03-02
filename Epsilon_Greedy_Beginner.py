@@ -4,7 +4,7 @@ import os
 import time
 import matplotlib.pyplot as plt
 
-numOfPlays = 500
+numOfPlays = 750
 results = np.zeros(numOfPlays)
 wins = 0
 losses = 0
@@ -12,7 +12,10 @@ winList = [0]
 winRateList = [0]
 
 bandit_probs = [0.2, 0.5, 0.75]
+
+#epsilon = 0 for pure Greedy Algorithm, an epsilon value greater than zero would result with Epsilon - Greedy Algorithm, such as;
 epsilon = 0.15
+
 
 exploreCount = 0
 
@@ -124,6 +127,7 @@ while i < numOfPlays:
     winRate = totalWins / i
     winRateList.append(winRate)
 
+    # Clearing the screen output once, in order to print out the ultimate results of the algorithm:
     os.system('cls')
 
 print("Times played: ", numOfPlays)
