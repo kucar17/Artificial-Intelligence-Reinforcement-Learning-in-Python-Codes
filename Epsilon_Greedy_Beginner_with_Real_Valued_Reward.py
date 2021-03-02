@@ -4,13 +4,10 @@ import os
 import time
 import matplotlib.pyplot as plt
 
-numOfPlays = 750
-#results = np.zeros(numOfPlays)
-#wins = 0
-#losses = 0
-#winList = [0]
-#winRateList = [0]
-totalResultList = []
+numOfPlays = 500
+individualResults = []
+resultList = []
+meanList = []
 
 bandit_means = [1.5, 2.5, 3.5]
 
@@ -25,28 +22,17 @@ class Bandit:
         self.m = m
         self.m_estimate = 0
         self.N = 0
-        #self.win_count = 0
 
     def pull(self):
         
-        rate = random.uniform(self.m, 1)
+        rate = np.random.randn() + self.m
         return rate
         
-        """
-        if rate < self.p:
-
-            return 1
-
-        else:
-
-            return 0
-        """
-
     def update(self, result):
         
         self.N += 1
 
-        self.m_estimate = (1/self.N) * ((self.N-1) * self.m_estimate + result)
+        self.m_estimate = (1 - 1.0/self.N) * self.m_estimate + 1.0/self.N * result
 
 def findMaxIndex(list):
 
@@ -61,11 +47,12 @@ bandit3 = Bandit(bandit_means[2])
 i = 0
 
 # PLAY BEGINS
-totalResultList.append(0)
 
 while i < numOfPlays:
 
+    print("."*i)
     print("PLAYING...")
+    
 
     epsilonCheck = random.uniform(0, 1)
 
@@ -109,52 +96,39 @@ while i < numOfPlays:
             bandit3.update(result)
 
     i += 1
-    totalResultListToAppend = totalResultList[-1] + result
-    totalResultList.append(totalResultListToAppend)
-    """
-    if result == 1:
-        print("You won!")
-        wins += 1
-        winList.append(winList[-1] + 1)
-    else:
-        print("You lost!")
-        losses += 1
-        winList.append(winList[-1] + 0)
-    """
+    individualResults.append(result)
+    resultList.append(sum(individualResults))
+    meanList.append(resultList[-1]/i)
     print("You get", str(result)+"!")
-
-    #totalWins = bandit1.win_count + bandit2.win_count + bandit3.win_count
-    #winRate = totalWins / i
-    #winRateList.append(winRate)
 
     # Clearing the screen output once, in order to print out the ultimate results of the algorithm:
     os.system('cls')
 
-print("Times played: ", numOfPlays)
-#print("Number of wins:", wins)
-#print("Number of losses:", losses)
-#print("Win ratio:", winRate)
+print("Times played:", numOfPlays)
+print("Total reward collected:", resultList[-1])
+print("Average reward collected on each try:", resultList[-1]/numOfPlays)
 print(" ")
 
 print("Number of times played with Bandit1:", bandit1.N)
-#print("Number of times won with Bandit1:", bandit1.win_count)
-print("Bandit1 mean estimate:", bandit1.p_estimate)
+print("Bandit1 mean estimate:", bandit1.m_estimate)
 print(" ")
 
 print("Number of times played with Bandit2:", bandit2.N)
-#print("Number of times won with Bandit2:", bandit2.win_count)
-print("Bandit2 mean estimate:", bandit2.p_estimate)
+print("Bandit2 mean estimate:", bandit2.m_estimate)
 print(" ")
 
 print("Number of times played with Bandit3:", bandit3.N)
-#print("Number of times won with Bandit3:", bandit3.win_count)
-print("Bandit3 mean estimate:", bandit3.p_estimate)
+print("Bandit3 mean estimate:", bandit3.m_estimate)
 print(" ")
 
 print("Number of times explore is chosen:", exploreCount)
 print("Number of times exploit is chosen:", numOfPlays - exploreCount)
 
-plt.plot(totalResultList)
+plt.plot(meanList)
+plt.plot(np.ones(i) * bandit_means[0])
+plt.plot(np.ones(i) * bandit_means[1])
+plt.plot(np.ones(i) * bandit_means[2])
 plt.grid(True)
+plt.xscale("log")
 plt.show()
 
